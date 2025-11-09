@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
+    <title>Form</title>
+</head>
+
+<body>
+    <header>
+        <h1>Form</h1>
+    </header>
+    <main>
+        <form id="mioForm" action="/submit" method="GET" novalidate>
+            <div>
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+                <span class="error-message" id="nome-error"></span>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <span class="error-message" id="email-error"></span>
+            </div>
+            <div>
+                <label for="eta">Età:</label>
+                <input type="number" id="eta" name="eta" min="1" max="120" required>
+                <span class="error-message" id="eta-error"></span>
+            </div>
+            <div>
+                <label for="numero">Numero di telefono:</label>
+                <input type="text" id="numero" name="numero" required>
+                <span class="error-message" id="num-error"></span>
+            </div>
+            <div>
+                <label for="condizioni">Accetto le condizioni:</label>
+                <input type="checkbox" id="condizioni" name="condizioni" required>
+                <span class="error-message" id="condizioni-error"></span>
+            </div>
+            <button class="hvr-shutter-out-horizontal" type="submit">Invia</button>
+        </form>
+</body>
+
+</html>
