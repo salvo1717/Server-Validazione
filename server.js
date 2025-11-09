@@ -71,9 +71,6 @@ async function requestHandler(req, res) {
             if (password == undefined || password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
                 stringaerrore += 'Password non valida. ';
             }
-            if (!patenti) {
-                stringaerrore += 'Seleziona almeno una patente. ';
-            }
             if (scuola == undefined || scuola === "") {
                 stringaerrore += 'Seleziona una scuola. ';
             }
