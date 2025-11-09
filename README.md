@@ -1,62 +1,84 @@
-# 🚀 Server-Validazione Form (Node.js)
+# 🚀 Server Web Semplice con Gestione Form
 
-Questo progetto implementa un semplice server HTTP con Node.js per servire un form HTML e gestire la **validazione dei dati** inviati tramite query string (metodo GET).
-
-La validazione è eseguita **lato server** (nel file `server.js`) per garantire la sicurezza e l'integrità dei dati, anche se la validazione lato client è disabilitata (`novalidate` su `index.html`).
-
----
-
-## ✨ Caratteristiche Principali
-
-* **Server HTTP Puro:** Utilizza il modulo `http` integrato di Node.js.
-* **Validazione Lato Server:** Controlli di base per Nome, Email, Età, Numero di Telefono e accettazione delle Condizioni.
-* **Gestione Risorse:** Server in grado di servire file HTML, CSS, JS e immagini da cartelle dedicate (`html`, `css`, `js`, `img`).
-* **Animazione Bottone:** Utilizzo della libreria CDN **Hover.css** (`hvr-shutter-out-horizontal`) per un effetto hover elegante sul pulsante di invio.
-* **Gestione Errori:** Restituisce un codice di stato **400 (Bad Request)** e una stringa di errori chiara in caso di fallimento della validazione.
+Questo è un server web di base sviluppato in **Node.js** utilizzando il modulo `http` integrato. Gestisce la **servizione di file statici** (HTML, CSS, JS, immagini) e l'**elaborazione di un form** inviato tramite metodo POST, inclusa la gestione del caricamento di file e una convalida di base dei dati.
 
 ---
 
 ## 🛠️ Requisiti
 
-* [Node.js](https://nodejs.org/) (versione LTS consigliata).
+Per eseguire questo progetto, devi avere installato:
+
+* **Node.js** (versione consigliata: 12.x o successiva)
+
+### 📦 Installazione delle Dipendenze
+
+Il progetto utilizza la libreria `formidable` per l'elaborazione dei dati dei form `multipart/form-data` e i caricamenti di file.
+
+1.  Apri il terminale nella directory del progetto.
+2.  Installa la dipendenza necessaria:
+    ```bash
+    npm install formidable
+    ```
 
 ---
 
-## 💻 Avvio del Progetto
+## 📂 Struttura del Progetto
 
-1.  **Clona il Repository:**
-    ```bash
-    git clone [https://github.com/salvo1717/Server-Validazione.git](https://github.com/salvo1717/Server-Validazione.git)
-    cd Server-Validazione
-    ```
+Il server è configurato per cercare le risorse statiche in cartelle specifiche. Assicurati di avere la seguente struttura:
+├── server.js
+├── package.json
+├── node_modules
+├── html/
+│   ├── index.html
+│   └── 404.html (pagina di errore)
+├── css/
+    ├──index.css
+    └──404.css
+└── uploads/
 
-2.  **Avvia il Server:**
-    Non sono necessarie dipendenze esterne (`npm install`). Esegui direttamente il file `server.js`:
+## ▶️ Avvio del Server
+
+1.  Assicurati che la dipendenza `formidable` sia installata.
+2.  Avvia il server dal terminale:
+
     ```bash
     node server.js
     ```
 
-3.  **Accesso:**
-    Apri il tuo browser e naviga all'indirizzo:
+3.  Apri il tuo browser e naviga verso l'indirizzo:
+    **`http://127.0.0.1:3000/`**
+
+    Il terminale confermerà l'avvio:
     ```
-    [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
+    Server running at [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
     ```
 
 ---
 
-## 📋 Endpoint e Logica di Validazione
+## ✨ Funzionalità
 
-| Percorso | Metodo | Scopo | Risposta in Caso di Successo | Risposta in Caso di Errore |
-| :--- | :--- | :--- | :--- | :--- |
-| `/` | GET | Serve la pagina `index.html`. | Status 200, Content-Type `text/html`. | Status 404 (se file non trovato). |
-| `/submit` | GET | Gestisce la sottomissione del form e valida i dati passati in query. | Status 200, `text/plain` ("Form inviato con successo!"). | Status 400, `text/plain` (elenco degli errori). |
+### 🌐 Servizio di Contenuti Statici
 
-### Regole di Validazione Server (`server.js`)
+Il server gestisce automaticamente la distribuzione di file basandosi sull'estensione dell'URL:
 
-| Campo | Regola di Controllo |
-| :--- | :--- |
-| **Nome** | Non vuoto (`!== ""`) E deve contenere solo lettere e spazi (`/^[a-zA-Z ]+$/gm`). |
-| **Email** | Non vuota (`!== ""`) E deve seguire il formato standard (regex `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`). |
-| **Età** | Non vuota (`!== ""`), è un numero (`!isNaN`), ed è compresa tra 0 e 120. |
-| **Numero** | Corrisponde al formato internazionale di base (tra 7 e 15 cifre con `+` iniziale opzionale: `/^\+?[0-9]{7,15}$/`). |
-| **Condizioni** | Il valore deve essere la stringa `'on'` (selezionato). |
+| Estensione | Tipo MIME | Cartella di Ricerca |
+| :---: | :---: | :---: |
+| `.html` | `text/html` | `html` |
+| `.css` | `text/css` | `css` |
+| `.js` | `application/javascript` | `js` |
+| `.jpg`, `.png` | `image/jpeg`, `image/png` | `img` |
+
+* Se l'URL non ha estensione (es. `/`), cerca `index.html` nella cartella `html`.
+* Se un file non viene trovato, risponde con `404 Not Found` e serve il file `404.html`.
+
+### 📝 Gestione e Convalida Form
+
+L'endpoint **POST** su `/submit` elabora i dati inviati da un form HTML:
+
+* **Caricamento File:** Gestisce i file caricati (`foto_profilo`) salvandoli nella cartella **`uploads`**.
+* **Convalida:** Effettua una serie di controlli sui campi inviati:
+    * **Formato Immagine:** Verifica che la foto profilo sia un'immagine valida (`.jpg`, `.jpeg`, `.png`, `.gif`).
+    * **Validazione Dati:** Controlli su nome, cognome (solo lettere), data (non nel futuro), sesso, email (formato base), password (min. 8 caratteri, con maiuscole, minuscole e numeri), selezione di patente, scuola e commenti.
+* **Risposta:**
+    * **Successo (200):** Se tutti i campi sono validi.
+    * **Errore (400):** Se la convalida fallisce, restituisce un messaggio che elenca tutti gli errori riscontrati.
