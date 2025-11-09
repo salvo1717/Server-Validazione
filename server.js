@@ -24,7 +24,9 @@ async function requestHandler(req, res) {
         const form = formidable({
             multiples: true,
             uploadDir: path.join(__dirname, 'uploads'),
-            keepExtensions: true
+            keepExtensions: true,
+            allowEmptyFiles: true,
+            minFileSize: 0
         });
         form.parse(req, (err, fields, files) => {
             if (err) {
